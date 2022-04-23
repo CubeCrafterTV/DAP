@@ -11,6 +11,16 @@ public class Teilmengen{
 			//ERROR
 			return;
 		}
+		if(true){
+			data = null;
+			data = new int[10];
+			for(int i = 0; i < 10; i++){
+				data[i] = i+1;
+			}
+			System.out.println(Arrays.toString(data));
+			System.out.println("Anzahl an 7 elementigen Teilmengen: " + numOfSubsets(data, 0, 9, 7));
+			return;
+		}
 		//Logical or operation finishes if first argument is true without checking
 		//second, so no outofBoundsException will be thrown
 		int k = 0;
@@ -24,15 +34,16 @@ public class Teilmengen{
 			return;
 		}
 		System.out.println("Array: " +Arrays.toString(data));
+		
+		
 		int index = removeDuplicates(data);
 		System.out.println("Sorted duplicate Array ab " + (index+1) + ": " +Arrays.toString(data));
 		
-		System.out.println("Anzahl an k Teilmengen: " + numOfSubsets(data, index, k));
+		System.out.println("Anzahl an " + k + " Teilmengen: " + numOfSubsets(data, 0, index, k));
 		
 	}
-	public static int numOfSubsets(int[] data, int rightBound, int size){
-		//System.out.println("rightbound = " + rightBound + "    size = " + size);
-		if(rightBound+1 == size) {
+	public static int numOfSubsets(int[] data, int leftBound, int rightBound, int size){
+		if(leftBound >= size){
 			int[] tmp = new int[size];
 			for(int i = 0; i < size; i++){
 				tmp[i] = data[i];
@@ -40,21 +51,19 @@ public class Teilmengen{
 			System.out.println(Arrays.toString(tmp));
 			return 1;
 		}
-		int numOfPermutations = 0;
-		//gesnacked von Permutations
-        for(int i = 0; i <= rightBound; i++){
-            int swap = data[i];
-            data[i] = data[rightBound];
-            data[rightBound] = swap;
-
-            numOfPermutations += numOfSubsets(data, rightBound-1, size);
-
-            swap = data[i];
-            data[i] = data[rightBound];
-            data[rightBound] = swap;
-        }
-		
-		return numOfPermutations;
+		int numOfSubsets = 0;
+		for(int i = leftBound; i<=rightBound; i++){
+			 swap(data,leftBound,i);
+			 numOfSubsets += numOfSubsets(data,leftBound+1,rightBound,size);
+			 swap(data,leftBound,rightBound);
+			 rightBound--;
+		}
+		return numOfSubsets;
+	}
+	public static void swap(int[] arr, int a, int b){
+		int swap = arr[a];
+        arr[a] = arr[b];
+        arr[b] = swap;
 	}
 	public static int removeDuplicates(int[] data){
 		//TODO in O(n)
