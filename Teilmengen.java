@@ -11,16 +11,7 @@ public class Teilmengen{
 			//ERROR
 			return;
 		}
-		if(true){
-			data = null;
-			data = new int[10];
-			for(int i = 0; i < 10; i++){
-				data[i] = i+1;
-			}
-			System.out.println(Arrays.toString(data));
-			System.out.println("Anzahl an 7 elementigen Teilmengen: " + numOfSubsets(data, 0, 9, 7));
-			return;
-		}
+
 		//Logical or operation finishes if first argument is true without checking
 		//second, so no outofBoundsException will be thrown
 		int k = 0;
@@ -39,24 +30,24 @@ public class Teilmengen{
 		int index = removeDuplicates(data);
 		System.out.println("Sorted duplicate Array ab " + (index+1) + ": " +Arrays.toString(data));
 		
-		System.out.println("Anzahl an " + k + " Teilmengen: " + numOfSubsets(data, 0, index, k));
+		System.out.println("Anzahl an " + k + "er Teilmengen: " + numOfSubsets(data, 0, index, k));
 		
 	}
-	public static int numOfSubsets(int[] data, int leftBound, int rightBound, int size){
-		if(leftBound >= size){
-			int[] tmp = new int[size];
-			for(int i = 0; i < size; i++){
-				tmp[i] = data[i];
-			}
-			System.out.println(Arrays.toString(tmp));
+	//Links:  Bereits chosen
+	//Rechts: Nicht mehr choosen
+	public static int numOfSubsets(int[] data, int start, int rightBound, int size){
+		if(start == size){
+			printArrFromTill(data,0,size);
 			return 1;
 		}
 		int numOfSubsets = 0;
-		for(int i = leftBound; i<=rightBound; i++){
-			 swap(data,leftBound,i);
-			 numOfSubsets += numOfSubsets(data,leftBound+1,rightBound,size);
-			 swap(data,leftBound,rightBound);
-			 rightBound--;
+		for(int i = start; i < rightBound+1; i++){
+			swap(data,start,i);
+			numOfSubsets += numOfSubsets(data, start+1, rightBound, size);
+			swap(data,start,i);
+			/**/swap(data,i,rightBound);
+			/**/rightBound--;
+			/**/i--;
 		}
 		return numOfSubsets;
 	}
@@ -64,6 +55,13 @@ public class Teilmengen{
 		int swap = arr[a];
         arr[a] = arr[b];
         arr[b] = swap;
+	}
+	public static void printArrFromTill(int[] data, int start, int end){
+		int[] tmp = new int[end-start];
+		for(int i = 0; i < end-start; i++){
+			tmp[i] = data[i];
+		}
+		System.out.println(Arrays.toString(tmp));
 	}
 	public static int removeDuplicates(int[] data){
 		//TODO in O(n)
