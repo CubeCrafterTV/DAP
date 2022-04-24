@@ -16,7 +16,7 @@ public class LexOrdnung{
 		if(args.length == 1){
 			try{
 				k = Integer.parseInt(args[0]);
-				if(k<0) throw new Exception();
+				if(k<=0) throw new Exception();
 			} catch(Exception e){
 				System.out.println("You can only enter positive Integers");
 				return;
@@ -31,19 +31,25 @@ public class LexOrdnung{
 		}
 		System.out.println("Array: " +Arrays.toString(data));
 		Arrays.sort(data);
+		//Find sorts the array to be the k-th smallest Permutation
 		find(data,0,k);
 		System.out.println("Die " + k + ". kleinste Permutation ist: " + Arrays.toString(data));
-		//Ordnung: p < q: Es gibt ein i, so dass bis i-1 alles gleich ist, und p[i] < als alle qs bis dahin
 	}
 	public static void find(int[] arr, int leftBound, int k){
 		if(k==1 || leftBound == arr.length-1)return;
 		
+		//Equation from Übungsblatt: +leftBound because to function as an index over the entire Array, it
+		//has to be "normalized"
 		int i = (k-1)/fakultaet(arr.length-1-leftBound) + leftBound;
+		//Every element gets swapped one to its right, till the i-th element, which gets swapped to
+		//the start
 		for(int j = leftBound+1;  j<=i; j++){
 			int swap = arr[leftBound];
 			arr[leftBound] = arr[j];
 			arr[j] = swap;			
 		}
+		//Recursion with the subarray ignoring the newly fixed value. Equation taken from Übungsblatt
+		//i ist normalized back here
 		find(arr, leftBound+1, k-(i-leftBound)*fakultaet(arr.length-1-leftBound));
 	}
 	public static int fakultaet(int i){
