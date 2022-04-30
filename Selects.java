@@ -1,3 +1,7 @@
+import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class Selects{
 	public static void main(String[] args){
 		int[] data = scanIntArray();
@@ -21,17 +25,43 @@ public class Selects{
 			System.out.println("One Integer parameter has to be entered");
 			return;
 		}
+		buildMinHeap(data);
+		System.out.println(Arrays.toString(data));
+		System.out.println(isMinHeap(data));
+		System.out.println(heapSelect(data, k));
 	}
 	public static void minHeapify(int[] data, int i, int n){
+		if(2*i > n)	return;
+		int indexSmallerChild = 0;
+		if(2*i+1>n){
+			indexSmallerChild = 2*i;
+		} else {
+			indexSmallerChild = (data[2*i-1] < data[2*i+1-1]) ? 2*i : 2*i+1;
+		}
+		if(data[indexSmallerChild-1] < data[i-1]){
+			swap(data, i-1, indexSmallerChild-1);
+			minHeapify(data, indexSmallerChild,n);
+		} 
 		
 	}
 	public static void buildMinHeap(int[] data){
-		
+		for(int i = data.length/2; i<=1; i--){
+			minHeapify(data,i, data.length);
+		}
 	}
 	public static int extractMin(int[] data, int n){
-		
+		if(n == 0) return 0;
+		if(n == 1) return data[0];
+		swap(data, 0, n-1);
+		minHeapify(data, n-1,1);
+		return data[n-1];
 	}
 	public static int heapSelect(int[] data, int k){
+		int result = 0;
+		for(int i = 0; i< k; i++){
+			result = extractMin(data,data.length-i);
+		}
+		return result;
 		
 	}
 	public static int[] scanIntArray(){
@@ -52,4 +82,17 @@ public class Selects{
         }
         return array;
     }
+	public static boolean isMinHeap(int[] data){
+		for(int i = 1; i < data.length/2; i++){
+			if(data[i-1] >= data[2*i-1] || data[i-1] >= data[2*i+1-1]){
+				return false;
+			}
+		}
+		return true;
+	}
+	public static void swap(int[] data, int a, int b){
+		int hilfsBroetchen = data[a];
+		data[a] = data[b];
+		data[b] = hilfsBroetchen;
+	}
 }
