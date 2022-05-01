@@ -25,6 +25,10 @@ public class Selects{
 			System.out.println("One Integer parameter has to be entered");
 			return;
 		}
+		if(k >= data.length){
+			System.out.println("Parameter too big for array");
+			return;
+		}
 		buildMinHeap(data);
 		System.out.println(Arrays.toString(data));
 		System.out.println(isMinHeap(data));
@@ -45,7 +49,7 @@ public class Selects{
 		
 	}
 	public static void buildMinHeap(int[] data){
-		for(int i = data.length/2; i<=1; i--){
+		for(int i = data.length/2; i>=1; i--){
 			minHeapify(data,i, data.length);
 		}
 	}
@@ -53,7 +57,7 @@ public class Selects{
 		if(n == 0) return 0;
 		if(n == 1) return data[0];
 		swap(data, 0, n-1);
-		minHeapify(data, n-1,1);
+		minHeapify(data, 1, n-1);
 		return data[n-1];
 	}
 	public static int heapSelect(int[] data, int k){
@@ -63,7 +67,16 @@ public class Selects{
 		}
 		return result;
 		
+	}	
+	public static boolean isMinHeap(int[] data){
+		for(int i = 1; i < data.length/2; i++){
+			if(data[i-1] > data[2*i-1] || data[i-1] > data[2*i+1-1]){
+				return false;
+			}
+		}
+		return true;
 	}
+	
 	public static int[] scanIntArray(){
         Scanner scanner = new Scanner(System.in);
         ArrayList<String> inputs = new ArrayList<String>();
@@ -82,14 +95,6 @@ public class Selects{
         }
         return array;
     }
-	public static boolean isMinHeap(int[] data){
-		for(int i = 1; i < data.length/2; i++){
-			if(data[i-1] >= data[2*i-1] || data[i-1] >= data[2*i+1-1]){
-				return false;
-			}
-		}
-		return true;
-	}
 	public static void swap(int[] data, int a, int b){
 		int hilfsBroetchen = data[a];
 		data[a] = data[b];
