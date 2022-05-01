@@ -1,6 +1,8 @@
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.time.Instant;
+import java.time.Duration;
 
 public class Selects{
 	public static void main(String[] args){
@@ -29,7 +31,11 @@ public class Selects{
 			System.out.println("Parameter too big for array");
 			return;
 		}
+		
 		buildMinHeap(data);
+
+		//assert isMinHeap(data);
+		
 		System.out.println(Arrays.toString(data));
 		System.out.println(isMinHeap(data));
 		System.out.println(heapSelect(data, k));
