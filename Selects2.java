@@ -2,6 +2,9 @@ import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
+import java.time.Instant;
+import java.time.Duration;
+
 public class Selects2{
 	public static void main(String[] args){
 		int[] data = scanIntArray();
@@ -40,7 +43,7 @@ public class Selects2{
 		int[] data1 = copyArray(data);
 		int[] data2 = copyArray(data1);
 		//if(whichAlgorithm == 0){
-			System.out.println("Heapelect:");
+			System.out.println("Heapselect:");
 			buildMinHeap(data);
 			System.out.println(Arrays.toString(data));
 			System.out.println(isMinHeap(data));
