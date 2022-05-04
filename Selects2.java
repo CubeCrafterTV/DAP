@@ -7,10 +7,10 @@ import java.time.Duration;
 
 public class Selects2{
 	public static void main(String[] args){
-		int[] data = scanIntArray();
+		/*int[] data = scanIntArray();
 		int k;
 		int whichAlgorithm = 3;
-		//scanIntArray returns null in case of error while reading input
+		scanIntArray returns null in case of error while reading input
 		if(data==null || data.length == 0){
 			System.out.println("Error: You have to enter at least one number into the list");
 			return;
@@ -40,15 +40,48 @@ public class Selects2{
 			return;
 		}
 		
+		doAction(data,k,whichAlgorithm);*/
+		testAlgorithms();
+		
+	}
+	public static void testAlgorithms(){
+		System.out.println("Testing Quickf:");
+		System.out.println("...");
+		Random rdm = new Random();
+		int numOfSuccess = 0;
+		int k;
+		for(int i = 0; i < 1000; i++){		
+			int[] arr = createRandomArray(100,false);
+			k = rdm.nextInt(arr.length)+1;
+			//buildMinHeap(arr);
+			int guess = quickSelectRand(arr,k);
+			Arrays.sort(arr);
+			if(arr[k-1] == guess)numOfSuccess++;
+		}
+		System.out.println(numOfSuccess + "/1000 corrects w/o duplicates");
+		numOfSuccess = 0;
+		for(int i = 0; i < 1000; i++){	
+			int[] arr = createRandomArray(100,true);
+			k = rdm.nextInt(arr.length)+1;
+			//buildMinHeap(arr);
+			int guess = quickSelectRand(arr,k);
+			Arrays.sort(arr);
+			if(arr[k-1] == guess)numOfSuccess++;
+		}
+		System.out.println(numOfSuccess + "/1000 corrects with duplicates");
+		
+	}
+	public static void doAction(int[] data, int k, int whichAlgorithm){
 		int[] data1 = copyArray(data);
 		int[] data2 = copyArray(data1);
-		//if(whichAlgorithm == 0){
+		int element;
+		if(whichAlgorithm == 0){
 			System.out.println("Heapselect:");
 			buildMinHeap(data);
 			System.out.println(Arrays.toString(data));
 			System.out.println(isMinHeap(data));
 			System.out.println(heapSelect(data, k));
-		//} else if(whichAlgorithm == 0){
+		} else if(whichAlgorithm == 1){
 			System.out.println("");
 			System.out.println("");
 			System.out.println("");
@@ -56,10 +89,10 @@ public class Selects2{
 			System.out.println("Quickselect First");
 			System.out.println(Arrays.toString(data1));
 			
-			int element = quickSelectFirst(data1, k);
+			element = quickSelectFirst(data1, k);
 			System.out.println(Arrays.toString(data1));
 			System.out.println(element);
-		/*} else if(whichAlgorithm == 0){
+		} else if(whichAlgorithm == 2){
 			System.out.println("");
 			System.out.println("");
 			System.out.println("");
@@ -70,8 +103,7 @@ public class Selects2{
 			element = quickSelectRand(data2, k);
 			System.out.println(Arrays.toString(data2));
 			System.out.println(element);
-		*///}
-		
+		}
 	}
 	public static void quickSort(int[] data, int l, int r){
 		if(l < 0 || r >= data.length || r-l < 1)return;
@@ -172,14 +204,19 @@ public class Selects2{
 	public static int quickSelectFirst(int[] data, int k){
 		return quickSelectFirst(data, 0,data.length-1, k);
 	}
+	//Funktioniert manchmal nicht der Hurensohn
 	public static int quickSelectRand(int[] data, int l, int r, int k){
 		if(k==1 || r <= l)return data[l];
+		//m is an index, from which everything is smaller than data[m]
 		int rdm = new Random().nextInt(r-l);
-		int m = partition(data, l, l+rdm, r);
-		if(k <= m){
-			return quickSelectFirst(data, l, m, k);
+		int m = partition(data, l, l+rdm, r)-l;
+		if(m==0){
+			return quickSelectFirst(data,l+1,r,k-1);
+		}
+		if(k > m){
+			return quickSelectFirst(data, l+m, r, k-m);
 		} else{
-			return quickSelectFirst(data, m+1, r, k-m);
+			return quickSelectFirst(data, l, l+m-1, k);
 		}
 	}
 	public static int quickSelectRand(int[] data, int k){
@@ -207,6 +244,18 @@ public class Selects2{
 		int hilfsBroetchen = data[a];
 		data[a] = data[b];
 		data[b] = hilfsBroetchen;
+	}
+	public static int[] createRandomArray(int length, boolean duplicates){
+		if(length == 0) return new int[]{};
+		int[] arr = new int[length];
+		Random rdm = new Random();
+		for(int i = 0; i < arr.length; i++){
+			arr[i] = duplicates ? i/2 : i;
+		}
+		for(int i = 0; i < arr.length*2; i++){
+			swap(arr,rdm.nextInt(arr.length),rdm.nextInt(arr.length));
+		}
+		return arr;
 	}
 	public static int[] copyArray(int[] data){
 		int[] copy = new int[data.length];
