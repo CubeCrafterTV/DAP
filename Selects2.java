@@ -56,7 +56,7 @@ public class Selects2{
 			int element = quickSelectFirst(data1, k);
 			System.out.println(Arrays.toString(data1));
 			System.out.println(element);
-		//} else if(whichAlgorithm == 0){
+		/*} else if(whichAlgorithm == 0){
 			System.out.println("");
 			System.out.println("");
 			System.out.println("");
@@ -67,8 +67,16 @@ public class Selects2{
 			element = quickSelectRand(data2, k);
 			System.out.println(Arrays.toString(data2));
 			System.out.println(element);
-		//}
+		*///}
 		
+	}
+	public static void quickSort(int[] data, int l, int r){
+		if(l < 0 || r >= data.length || r-l < 1)return;
+
+        //recursion
+        int middle = partition(data, l,l, r);
+        quickSort(data, l, middle-1);
+        quickSort(data, middle+1, r);
 	}
 	public static void minHeapify(int[] data, int i, int n){
 		if(2*i > n)	return;
@@ -116,6 +124,7 @@ public class Selects2{
 	public static int partition(int[] data, int l, int p, int r){
 
         swap(data,l,p);
+        
         int pivot = data[l];
         
         int smallerNums = 0;
@@ -129,12 +138,12 @@ public class Selects2{
 		After all numbers of the interval are sorted into bigger or equal to and smaller than the pivot, the pivot is swapped with the last number bigger than the pivot,
 		ensuring that the pivot is between those two partitions.
 		*/
-		//Es wird andersrum sortiert, als Variablennamen es erscheinen lassen
+
         for( int i = l+1; i <= r-smallerNums; i++){
-            if(data[i] <= pivot){
+            if(data[i] < pivot){
                 biggerNums++;
 
-            } else if (data[i] > pivot){
+            } else if (data[i] >= pivot){
 				swap(data,i,r-smallerNums);
                 smallerNums++;
                 i--;
@@ -145,27 +154,29 @@ public class Selects2{
         return biggerNums+l;
 	}
 	public static int quickSelectFirst(int[] data, int l, int r, int k){
-		if(k==1 || l==r)return data[l];
-		int pivot = partition(data, l, l+k, r);
-		int m = pivot-l;
-		if(k <= m){
-			return quickSelectFirst(data, l, l+m-1, k);
-		} else{
+		if(k==1 || r <= l)return data[l];
+		//m is an index, from which everything is smaller than data[m]
+		int m = partition(data, l, l, r)-l;
+		if(m==0){
+			return quickSelectFirst(data,l+1,r,k-1);
+		}
+		if(k > m){
 			return quickSelectFirst(data, l+m, r, k-m);
+		} else{
+			return quickSelectFirst(data, l, l+m-1, k);
 		}
 	}
 	public static int quickSelectFirst(int[] data, int k){
 		return quickSelectFirst(data, 0,data.length-1, k);
 	}
 	public static int quickSelectRand(int[] data, int l, int r, int k){
-		if(k==1 || l==r)return data[l];
+		if(k==1 || r <= l)return data[l];
 		int rdm = new Random().nextInt(r-l);
-		int pivot = partition(data, l, l+rdm, r);
-		int m = pivot-l;
+		int m = partition(data, l, l+rdm, r);
 		if(k <= m){
-			return quickSelectFirst(data, l, l+m-1, k);
+			return quickSelectFirst(data, l, m, k);
 		} else{
-			return quickSelectFirst(data, l+m, r, k-m);
+			return quickSelectFirst(data, m+1, r, k-m);
 		}
 	}
 	public static int quickSelectRand(int[] data, int k){
