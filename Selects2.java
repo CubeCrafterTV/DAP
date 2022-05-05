@@ -45,31 +45,61 @@ public class Selects2{
 		
 	}
 	public static void testAlgorithms(){
-		System.out.println("Testing Quickf:");
-		System.out.println("...");
+		
 		Random rdm = new Random();
-		int numOfSuccess = 0;
+		int numOfSuccess1 = 0;
+		int numOfSuccess2 = 0;
+		int numOfSuccess3 = 0;
+		int numOfSuccess12 = 0;
+		int numOfSuccess22 = 0;
+		int numOfSuccess32 = 0;
 		int k;
 		for(int i = 0; i < 1000; i++){		
-			int[] arr = createRandomArray(100,false);
-			k = rdm.nextInt(arr.length)+1;
-			//buildMinHeap(arr);
-			int guess = quickSelectRand(arr,k);
-			Arrays.sort(arr);
-			if(arr[k-1] == guess)numOfSuccess++;
-		}
-		System.out.println(numOfSuccess + "/1000 corrects w/o duplicates");
-		numOfSuccess = 0;
+			int[] arr1 = createRandomArray(100,false);
+			int[] arr2 = copyArray(arr1);
+			int[] arr3 = copyArray(arr1);
+			k = rdm.nextInt(arr1.length)+1;
+			buildMinHeap(arr1);
+			int guess1 = heapSelect(arr1,k);
+			int guess2 = quickSelectFirst(arr2,k);
+			int guess3 = quickSelectRand(arr3,k);
+			Arrays.sort(arr1);
+			if(arr1[k-1] == guess1)numOfSuccess1++;
+			if(arr1[k-1] == guess2)numOfSuccess2++;
+			if(arr1[k-1] == guess3)numOfSuccess3++;
+		}	
 		for(int i = 0; i < 1000; i++){	
-			int[] arr = createRandomArray(100,true);
-			k = rdm.nextInt(arr.length)+1;
-			//buildMinHeap(arr);
-			int guess = quickSelectRand(arr,k);
-			Arrays.sort(arr);
-			if(arr[k-1] == guess)numOfSuccess++;
+			int[] arr1 = createRandomArray(100,true);
+			int[] arr2 = copyArray(arr1);
+			int[] arr3 = copyArray(arr1);
+			k = rdm.nextInt(arr1.length)+1;
+			buildMinHeap(arr1);
+			int guess1 = heapSelect(arr1,k);
+			int guess2 = quickSelectFirst(arr2,k);
+			int guess3 = quickSelectRand(arr3,k);
+			Arrays.sort(arr1);
+			if(arr1[k-1] == guess1)numOfSuccess12++;
+			if(arr1[k-1] == guess2)numOfSuccess22++;
+			if(arr1[k-1] == guess3)numOfSuccess32++;
 		}
-		System.out.println(numOfSuccess + "/1000 corrects with duplicates");
-		
+		System.out.println("");
+		System.out.println("");
+		System.out.println("Testing HeapSelect:");
+		System.out.println("...");
+		System.out.println(numOfSuccess1 + "/1000 corrects w/o duplicates");
+		System.out.println(numOfSuccess12 + "/1000 corrects with duplicates");
+		System.out.println("");
+		System.out.println("");
+		System.out.println("Testing QuickFirst:");
+		System.out.println("...");
+		System.out.println(numOfSuccess2 + "/1000 corrects w/o duplicates");
+		System.out.println(numOfSuccess22 + "/1000 corrects with duplicates");
+		System.out.println("");
+		System.out.println("");
+		System.out.println("Testing QuickRand:");
+		System.out.println("...");
+		System.out.println(numOfSuccess3 + "/1000 corrects w/o duplicates");
+		System.out.println(numOfSuccess32 + "/1000 corrects with duplicates");
 	}
 	public static void doAction(int[] data, int k, int whichAlgorithm){
 		int[] data1 = copyArray(data);
@@ -155,7 +185,6 @@ public class Selects2{
 		}
 		return true;
 	}
-	
 	public static int partition(int[] data, int l, int p, int r){
 
         swap(data,l,p);
@@ -189,16 +218,16 @@ public class Selects2{
         return biggerNums+l;
 	}
 	public static int quickSelectFirst(int[] data, int l, int r, int k){
-		if(k==1 || r <= l)return data[l];
 		//m is an index, from which everything is smaller than data[m]
 		int m = partition(data, l, l, r)-l;
+		if(k==1)return data[l];
 		if(m==0){
 			return quickSelectFirst(data,l+1,r,k-1);
 		}
 		if(k > m){
 			return quickSelectFirst(data, l+m, r, k-m);
 		} else{
-			return quickSelectFirst(data, l, l+m-1, k);
+			return quickSelectFirst(data, l, l+m, k);
 		}
 	}
 	public static int quickSelectFirst(int[] data, int k){
