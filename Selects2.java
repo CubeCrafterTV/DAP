@@ -7,10 +7,10 @@ import java.time.Duration;
 
 public class Selects2{
 	public static void main(String[] args){
-		/*int[] data = scanIntArray();
+		int[] data = scanIntArray();
 		int k;
 		int whichAlgorithm = 3;
-		scanIntArray returns null in case of error while reading input
+		//scanIntArray returns null in case of error while reading input
 		if(data==null || data.length == 0){
 			System.out.println("Error: You have to enter at least one number into the list");
 			return;
@@ -39,10 +39,16 @@ public class Selects2{
 			System.out.println("Parameter too big for array");
 			return;
 		}
+		makeTimeTest(data,whichAlgorithm);
+		executeSelect(data,k,whichAlgorithm, false);
+		//testAlgorithms();
 		
-		doAction(data,k,whichAlgorithm);*/
-		testAlgorithms();
-		
+	}
+	public static void makeTimeTest(int[] data, int whichAlgorithm){
+		Random random = new Random();
+		for(int i = 0; i < 20; i++){
+			executeSelect(copyArray(data),random.nextInt(data.length),whichAlgorithm, true);
+		}
 	}
 	public static void testAlgorithms(){
 		int numOfTests = 10000;
@@ -99,38 +105,47 @@ public class Selects2{
 		System.out.println(numOfSuccess3 + "/" + numOfTests + " corrects w/o duplicates");
 		System.out.println(numOfSuccess32 + "/" + numOfTests +" corrects with duplicates");
 	}
-	public static void doAction(int[] data, int k, int whichAlgorithm){
-		int[] data1 = copyArray(data);
-		int[] data2 = copyArray(data1);
-		int element;
+	public static void executeSelect(int[] data, int k, int whichAlgorithm, boolean measureTime){
+		Instant start = null, finish = null;
 		if(whichAlgorithm == 0){
 			System.out.println("Heapselect:");
+			if(measureTime)start = Instant.now();	
 			buildMinHeap(data);
-			System.out.println(Arrays.toString(data));
-			System.out.println(isMinHeap(data));
-			System.out.println(heapSelect(data, k));
+			if(data.length<50)System.out.println(Arrays.toString(data));
+			assert isMinHeap(data);
+					
+			int result = heapSelect(data, k);
+			if(measureTime)finish = Instant.now();
+			if(measureTime)System.out.println("Es wurde in " + (Duration.between(start, finish)).toMillis() + " Millisekunden gefinished");
+			assert result == controlSelect(data,k);
+			System.out.println(result);
+			//1078 898 925 660 764 1341 886  1360 835 47 1961 203 585 Rand
+			//109 272 76 90 432 211 122 336 171 308 35 370 361 Ordered
+			
 		} else if(whichAlgorithm == 1){
-			System.out.println("");
-			System.out.println("");
-			System.out.println("");
-			System.out.println("");
 			System.out.println("Quickselect First");
-			System.out.println(Arrays.toString(data1));
-			
-			element = quickSelectFirst(data1, k);
-			System.out.println(Arrays.toString(data1));
-			System.out.println(element);
+			if(data.length<50)System.out.println(Arrays.toString(data));
+			if(measureTime)start = Instant.now();		
+			int result = quickSelectFirst(data, k);
+			if(measureTime)finish = Instant.now();
+			if(measureTime)System.out.println("Es wurde in " + (Duration.between(start, finish)).toMillis() + " Millisekunden gefinished");
+			assert result == controlSelect(data,k);
+			if(data.length<50)System.out.println(Arrays.toString(data));
+			System.out.println(result);
+			//26 62 76 103 85 79 85 52 63 65 76 59 81 50 Rand
+			//15789 17867 16248 4982 14815 17644 Ordered
 		} else if(whichAlgorithm == 2){
-			System.out.println("");
-			System.out.println("");
-			System.out.println("");
-			System.out.println("");
 			System.out.println("Quickselect Random");
-			System.out.println(Arrays.toString(data2));
-			
-			element = quickSelectRand(data2, k);
-			System.out.println(Arrays.toString(data2));
-			System.out.println(element);
+			if(data.length<50)System.out.println(Arrays.toString(data));
+			if(measureTime)start = Instant.now();		
+			int result = quickSelectRand(data, k);
+			if(measureTime)finish = Instant.now();
+			if(measureTime)System.out.println("Es wurde in " + (Duration.between(start, finish)).toMillis() + " Millisekunden gefinished");
+			assert result == controlSelect(data,k);
+			if(data.length<50)System.out.println(Arrays.toString(data));
+			System.out.println(result);
+			//41 40 50 70 68 74 51 57 57 62 23 45 85 65 Rand
+			//34 37 16 32 20 15 15 15 19 28 13 17 15 Ordered
 		}
 	}
 	public static void quickSort(int[] data, int l, int r){
@@ -238,13 +253,17 @@ public class Selects2{
 		if(pivot==k-1)return data[pivot];
 		
 		if(k > pivot){
-			return quickSelectFirst(data, pivot+1,r,k);
+			return quickSelectRand(data, pivot+1,r,k);
 		}  else{
-			return quickSelectFirst(data, l,pivot-1,k);
+			return quickSelectRand(data, l,pivot-1,k);
 		}
 	}
 	public static int quickSelectRand(int[] data, int k){
 		return quickSelectRand(data, 0,data.length-1,k);
+	}
+	public static int controlSelect(int[] data, int k){
+		Arrays.sort(data);
+		return data[k-1];
 	}
 	public static int[] scanIntArray(){
         Scanner scanner = new Scanner(System.in);
