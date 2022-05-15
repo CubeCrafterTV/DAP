@@ -13,22 +13,22 @@ public class Radixsort{
             return;
         }
 		int[] data1 = copyArray(data);
-		System.out.println("lsd Array:        " + Arrays.toString(data));
+		//System.out.println("lsd Array:        " + Arrays.toString(data));
 		Instant start = Instant.now();	
 		lsdRadix(data);
 		Instant finish = Instant.now();
 			
 		assert isSorted(data);
-		System.out.println("lsd Sorted Array: " + Arrays.toString(data));
+		//System.out.println("lsd Sorted Array: " + Arrays.toString(data));
 		System.out.println("Es wurde in " + (Duration.between(start, finish)).toMillis() + " Millisekunden gefinished");
 
 		System.out.println("");
-		System.out.println("msd Array:        " + Arrays.toString(data1));
+		//System.out.println("msd Array:        " + Arrays.toString(data1));
 		start = Instant.now();
 		msdRadix(data1);
 		finish = Instant.now();
 		assert isSorted(data1);
-		System.out.println("msd Sorted Array: " + Arrays.toString(data1));
+		//System.out.println("msd Sorted Array: " + Arrays.toString(data1));
 		System.out.println("Es wurde in " + (Duration.between(start, finish)).toMillis() + " Millisekunden gefinished");
 
 	}
@@ -95,10 +95,11 @@ public class Radixsort{
 	}
 	public static void msdRadix(int[] data, int l, int r, int b){
 		if(b < 0)return;
-		if(r-l+1 <= 32){
+		if(r-l+1 <= 32)	{
 			inSort(data,l,r);
 			return;
 		}
+		
 		int[] C = sortByByteMSD(data,l,r,b);
 		
 		for(int i = 0; i < C.length-1; i++){
