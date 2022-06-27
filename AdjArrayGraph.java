@@ -7,12 +7,8 @@ public class AdjArrayGraph {
 	public static final boolean WEIGHTED = true;
 	private int[] firstEdge;
 	private int[] destination;
+	private int[] weights;
 	
-	public static void main(String[] args) {
-		AdjArrayGraph ag = new AdjArrayGraph();
-		ag.fromFile(PATH_TO_FILE +  (WEIGHTED ? "no" : "") + FILE_);
-		System.out.println(ag.toString());
-	}
 	
 	public void fromFile(String path){
 		try {
@@ -30,6 +26,7 @@ public class AdjArrayGraph {
 				int numOfEdges = Integer.parseInt(nums[3]);
 				firstEdge = new int[numOfVertecies+1];
 				destination = new int[numOfEdges];
+				weights = new int[numOfEdges];
 				break;
 			}
 			int[] numOfDestinationVertecies = new int[firstEdge.length];
@@ -59,9 +56,9 @@ public class AdjArrayGraph {
 	public String toString(){
 		String output = "";
 		for(int i = 0; i < firstEdge.length-1; i++){
-			output += i + ": ";
+			output += "Knoten " + i + " verbunden zu: ";
 			for(int j = 0; j < firstEdge[i+1]-firstEdge[i] ;j++){
-				output += destination[firstEdge[i]+j] + " "; 
+				output += destination[firstEdge[i]+j] + ", "; 
 			} 
 			output += "\n";
 		}
