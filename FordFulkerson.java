@@ -75,7 +75,7 @@ public class FordFulkerson{
 			for(int i = 0; i < edges.size(); i++){
 				if(!edges.get(i).getDst().isMarked()){
 					edges.get(i).getDst().setMark(true);
-					pre[edges.get(i).getDst().getID()][1] = handled.get(handled.size()-1);
+					pre[edges.get(i).getDst().getID()][1] = handled.get(indexCurrentNode);
 					handled.add(edges.get(i).getDst().getID());
 				}
 			}
