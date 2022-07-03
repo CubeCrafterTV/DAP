@@ -72,8 +72,8 @@ public class FordFulkerson{
 		while(augmentedPath != null){
 			//loopEntered = true;
 			System.out.println(augmentedPath.size() + " Pfad:       " + augmentedPath.toString());
-			System.out.println(transitionTable.length + " TransTable: " + Arrays.toString(transitionTable));
-			System.out.println(flow.length + " Flow:       " + Arrays.toString(flow));
+			//System.out.println(transitionTable.length + " TransTable: " + Arrays.toString(transitionTable));
+			//System.out.println(flow.length + " Flow:       " + Arrays.toString(flow));
 			//TODO bfs muss bei suchen eines Pfades den flow berücksichtigen
 			int bottleneckCapacity = Integer.MAX_VALUE;
 			//find out bottleneck
@@ -114,7 +114,7 @@ public class FordFulkerson{
 					System.out.println("Irgendein komischer Fehler ist passiert");
 					return -1;
 				}
-				flow[transitionTable[i]+edgeNum]+=bottleneckCapacity;
+				flow[transitionTable[augmentedPath.get(i)]+edgeNum]+=bottleneckCapacity;
 			}
 			dstFlow+=bottleneckCapacity;
 			//System.out.println(transitionTable.length + " TransTable: " + Arrays.toString(transitionTable));
@@ -138,14 +138,17 @@ public class FordFulkerson{
 		graph.getNode(src).setMark(true);
 		while(pre[dst] == -1 && !handled.isEmpty() ){
 			int indexCurrentNode = handled.size()-1;
-			LinkedList<WeightEdge> edges = graph.getNode(handled.get(indexCurrentNode)).getEdgeList();
+			int currentNode = handled.get(indexCurrentNode);
+			LinkedList<WeightEdge> edges = graph.getNode(currentNode).getEdgeList();
 			for(int i = 0; i < edges.size(); i++){
-				//Einzige veränderte Zeile für int[] flow und int[]transitionTable
 				WeightNode nextNode = edges.get(i).getDst();
-				if(!nextNode.isMarked() && flow[transitionTable[handled.get(indexCurrentNode)]+i] < edges.get(i).getWeight()){
-					nextNode.setMark(true);
-					pre[nextNode.getID()] = handled.get(indexCurrentNode);
-					handled.add(nextNode.getID());
+				//System.out.println(flow[transitionTable[currentNode]+i] + "  " + edges.get(i).getWeight());
+				if(flow[transitionTable[currentNode]+i] < edges.get(i).getWeight()){
+					if(!nextNode.isMarked()){
+						nextNode.setMark(true);
+						pre[nextNode.getID()] = currentNode;
+						handled.add(nextNode.getID());
+					}
 				}
 			}
 			handled.remove(indexCurrentNode);
