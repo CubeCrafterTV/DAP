@@ -27,5 +27,7 @@ public class ServerGUI{
 		dialogue.setText(dialogue.getText() +"\n" + s);
 		frame.repaint();
 	}
-	
+	public void end() {
+		frame.dispose();
+	}
 }
